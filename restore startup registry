@@ -1,0 +1,9 @@
+$backup = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run-Backup"
+$orig = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
+Get-ItemProperty -Path $backup | ForEach-Object {
+    foreach ($p in $_.PSObject.Properties) {
+        if ($p.Name -notmatch '^PS') {
+            New-ItemProperty -Path $orig -Name $p.Name -Value $p.Value -PropertyType String -Force | Out-Null
+        }
+    }
+}
